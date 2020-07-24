@@ -96,6 +96,39 @@ def draw_solid_rect(img, x1, x2, y1, y2, colour):
             img[j, i] = colour
 
 
+def get_img_sector(img, x, y, width, height):
+    """
+    Get sector (x, y) from an image, i.e. divide the image into a
+    width x height grid, and get the cell at (x, y)
+    :param img: the image to obtain a sector from
+    :param x: The x coordinate of the sector to obtain
+    :param y: The y coordinate of the sector to obtain
+    :param width: How many sectors wide to divide the image into
+    :param height: How many sectors high to divide the image into
+    :return:
+    """
+    return get_img_extract(img, x, x, y, y, width, height)
+
+
+def get_img_extract(img, x1, x2, y1, y2, width, height):
+    """
+    Get an extract of an image that includes all sectors of an image such that
+    x1 <= x <= x2, y1 <= y <= y2.
+    :param img: The image to get an extract of
+    :param x1: The lower bound of the x coordinates to extract
+    :param x2: The upper bound of the x coordinates to extract
+    :param y1: The lower bound of the y coordinates to extract
+    :param y2: The upper bound of the y coordinates to extract
+    :param width: How many sectors wide to divide the image into
+    :param height: How many sectors high to divide the image into
+    :return: An extract as described above
+    """
+    xscale = img.shape[1] / width
+    yscale = img.shape[0] / height
+    return img[int(y1 * yscale): int((y2 + 1) * yscale),
+               int(x1 * xscale): int((x2 + 1) * xscale)]
+
+
 def ask_save_before_doing(save_fn, do_fn, title, message):
     """
     Ask the user if they would like to save before a certain action proceeds.

@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
-from util import get_range_around, highlight_sector
+from util import get_range_around, highlight_sector, get_img_extract, \
+    get_img_sector
 from constants import COLOURS, DRAW_HEIGHT, DRAW_WIDTH, HIGHLIGHT_COLOUR
 
 
@@ -8,9 +9,6 @@ class PopRev(object):
 
     def __init__(self):
         self._source_img = None
-
-        self._XSCALE = None
-        self._YSCALE = None
 
         self._export = np.ones((DRAW_HEIGHT, DRAW_WIDTH, 3), dtype=np.uint8) * 255
         self._selections = np.ones((DRAW_HEIGHT, DRAW_WIDTH), dtype=np.uint8) * 9
@@ -23,21 +21,20 @@ class PopRev(object):
         return self._selections[y, x]
 
     def get_ref_sector(self, x, y):
-        return self._source_img[int(y * self._YSCALE): int((y + 1) * self._YSCALE),
-               int(x * self._XSCALE): int((x + 1) * self._XSCALE)]
+        return get_img_sector(self._source_img, x, y, DRAW_WIDTH, DRAW_HEIGHT)
 
     def get_ref_context(self, x, y, width, height, level):
         xl, xu = get_range_around(x, 0, DRAW_WIDTH - 1, level)
         yl, yu = get_range_around(y, 0, DRAW_HEIGHT - 1, level)
 
-        extract = self._source_img[int(yl * self._YSCALE): int((yu + 1) * self._YSCALE),
-                  int(xl * self._XSCALE): int((xu + 1) * self._XSCALE)]
+        extract = get_img_extract(self._source_img, xl, xu, yl, yu, DRAW_WIDTH,
+                                  DRAW_HEIGHT)
 
         resize = cv2.resize(extract, (width, height),
                             interpolation=cv2.INTER_NEAREST)
 
         highlight_sector(resize, x - xl, y - yl, 2 * level + 1,
-                         2 * level + 1, 1,HIGHLIGHT_COLOUR)
+                         2 * level + 1, 1, HIGHLIGHT_COLOUR)
 
         return resize
 
@@ -92,9 +89,6 @@ class PopRev(object):
 
     def load_reference(self, filename):
         self._source_img = cv2.imread(filename, cv2.IMREAD_COLOR)
-
-        self._XSCALE = self._source_img.shape[1] / DRAW_WIDTH
-        self._YSCALE = self._source_img.shape[0] / DRAW_HEIGHT
 
     def has_reference(self):
         return self._source_img is not None
