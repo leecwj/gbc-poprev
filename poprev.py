@@ -2,7 +2,8 @@ import numpy as np
 import cv2
 from util import get_range_around, highlight_sector, get_img_extract, \
     get_img_sector
-from constants import COLOURS, DRAW_HEIGHT, DRAW_WIDTH, HIGHLIGHT_COLOUR
+from constants import COLOURS, DRAW_HEIGHT, DRAW_WIDTH, HIGHLIGHT_COLOUR, \
+    COLOUR_UNKNOWN
 
 
 class PopRev(object):
@@ -11,7 +12,7 @@ class PopRev(object):
         self._source_img = None
 
         self._export = np.ones((DRAW_HEIGHT, DRAW_WIDTH, 3), dtype=np.uint8) * 255
-        self._selections = np.ones((DRAW_HEIGHT, DRAW_WIDTH), dtype=np.uint8) * 9
+        self._selections = np.ones((DRAW_HEIGHT, DRAW_WIDTH), dtype=np.uint8) * COLOUR_UNKNOWN
 
         self._save_name = None
 
@@ -78,7 +79,7 @@ class PopRev(object):
                 colour = int(cell)
                 self._selections[i, j] = colour
 
-                if not (0 <= colour <= 3):
+                if not (0 <= colour < 4):
                     self._export[i, j] = COLOURS[3]
                 else:
                     self._export[i, j] = COLOURS[colour]

@@ -1,16 +1,17 @@
 import cv2
 import tkinter as tk
+from PIL import Image, ImageTk
+from tkinter import filedialog
+
 from poprev import PopRev
 from util import ask_save_before_doing
 from constants import DRAW_WIDTH, DRAW_HEIGHT, REF_CANVAS_WIDTH,\
-    REF_CANVAS_HEIGHT, CSO_WIDTH, CSO_HEIGHT
-from PIL import Image, ImageTk
-from tkinter import filedialog
+    REF_CANVAS_HEIGHT, CSO_WIDTH, CSO_HEIGHT, BACKGROUND_COLOUR
 
 
 class PopRevApp(object):
 
-    def __init__(self, master, bg="#cce5ff"):
+    def __init__(self, master, bg=BACKGROUND_COLOUR):
         self._master = master
         self._bg = bg
 
@@ -143,7 +144,7 @@ class PopRevApp(object):
         selector = self._refexplorer.get_selector()
         colour = self._poprev.get_selection(self._x, self._y)
 
-        if not (0 <= colour <= 3):
+        if not (0 <= colour < 4):
             colour = None
 
         selector.set_selected(colour)
