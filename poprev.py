@@ -11,12 +11,14 @@ class PopRev(object):
     def __init__(self):
         self._source_img = None
 
-        self._export = np.ones((DRAW_HEIGHT, DRAW_WIDTH, 3), dtype=np.uint8) * 255
-        self._selections = np.ones((DRAW_HEIGHT, DRAW_WIDTH), dtype=np.uint8) * COLOUR_UNKNOWN
+        self._export = None
+        self._selections = None
 
         self._save_name = None
 
         self._unsaved_changes = False
+
+        self.new_drawing()
 
     def get_selection(self, x, y):
         return self._selections[y, x]
@@ -99,3 +101,11 @@ class PopRev(object):
 
     def unsaved_changes(self):
         return self._unsaved_changes
+
+    def new_drawing(self):
+        self._export = np.ones((DRAW_HEIGHT, DRAW_WIDTH, 3),
+                               dtype=np.uint8) * 255
+        self._selections = np.ones((DRAW_HEIGHT, DRAW_WIDTH),
+                                   dtype=np.uint8) * COLOUR_UNKNOWN
+        self._save_name = None
+        self._unsaved_changes = False

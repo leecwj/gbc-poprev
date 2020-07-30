@@ -30,6 +30,13 @@ class PopRevApp(object):
         self._setup_view()
         self.refresh_components()
 
+    def _smart_ask_save_before_doing(self, do_fn, title, message):
+        if self._poprev.unsaved_changes():
+            ask_save_before_doing(lambda: self._smart_save(), do_fn, title,
+                                  message)
+        else:
+            do_fn()
+
     def _setup_view(self):
         self._navigator = Navigator(self._master, self.handle_move_callback,
                                     self.handle_jump_callback, bg=self._bg)
@@ -51,14 +58,10 @@ class PopRevApp(object):
         self._master.protocol("WM_DELETE_WINDOW", self._exit)
 
     def _exit(self):
-        if self._poprev.unsaved_changes():
-            ask_save_before_doing(lambda: self._smart_save(),
-                                  lambda: self._master.destroy(),
-                                  "Save Before Exiting?",
-                                  "Do you want to save the current drawing "
-                                  "before exiting?")
-        else:
-            self._master.destroy()
+        title = "Save Before Exiting?"
+        message = "Would you like to save this drawing before exiting?"
+        self._smart_ask_save_before_doing(lambda: self._master.destroy(),
+                                          title, message)
 
     def _setup_menu(self):
         menu_bar = tk.Menu(self._master)
@@ -66,17 +69,26 @@ class PopRevApp(object):
 
         file_menu = tk.Menu(menu_bar)
         menu_bar.add_cascade(label="File", menu=file_menu)
-        file_menu.add_command(label="Load Reference",
-                              command=self.load_reference)
-        file_menu.add_command(label="Load Drawing",
-                              command=self.try_load_drawing)
-        file_menu.add_command(label="Save Drawing", command=self.save_drawing)
-        file_menu.add_command(label="Save Drawing As",
-                              command=self.save_drawing_as)
-        file_menu.add_command(label="Export Drawing",
-                              command=self.export_drawing)
 
-        file_menu.entryconfig(2, state=tk.DISABLED)
+        reference_menu = tk.Menu(file_menu)
+        file_menu.add_cascade(label="Reference", menu=reference_menu)
+
+        drawing_menu = tk.Menu(file_menu)
+        file_menu.add_cascade(label="Drawing", menu=drawing_menu)
+
+        reference_menu.add_command(label="Load Reference",
+                                   command=self.load_reference)
+
+        drawing_menu.add_command(label="New Drawing",
+                                 command=self.try_new_drawing)
+        drawing_menu.add_command(label="Load Drawing",
+                                 command=self.try_load_drawing)
+        drawing_menu.add_command(label="Save Drawing",
+                                 command=self._smart_save)
+        drawing_menu.add_command(label="Save Drawing As",
+                                 command=self.save_drawing_as)
+        drawing_menu.add_command(label="Export Drawing",
+                                 command=self.export_drawing)
 
         self._file_menu = file_menu
 
@@ -176,8 +188,6 @@ class PopRevApp(object):
             self._poprev.save_drawing_as(filename)
             self.refresh_title()
 
-            self._file_menu.entryconfig(2, state=tk.ACTIVE)
-
     def load_drawing(self):
         filename = filedialog.askopenfilename(title="Select Drawing",
                                               filetypes=(("poprev drawing",
@@ -188,14 +198,22 @@ class PopRevApp(object):
             self.refresh_components()
 
     def try_load_drawing(self):
-        if self._poprev.unsaved_changes():
-            ask_save_before_doing(lambda: self._smart_save(),
-                                  lambda: self.load_drawing(),
-                                  "Save Before Loading?",
-                                  "Would you like to save this drawing before "
-                                  "loading another?")
-        else:
-            self.load_drawing()
+        title = "Save Before Loading?"
+        message = "Would you like to save this drawing before loading " \
+                  "another?"
+        self._smart_ask_save_before_doing(lambda: self.load_drawing(),
+                                          title, message)
+
+    def new_drawing(self):
+        self._poprev.new_drawing()
+        self.refresh_components()
+
+    def try_new_drawing(self):
+        title = "Save Before Starting Over?"
+        message = "Would you like to save this drawing before starting " \
+                  "another?"
+        self._smart_ask_save_before_doing(lambda: self.new_drawing(),
+                                          title, message)
 
     def handle_move_callback(self, direction):
         self.move_to(direction)
