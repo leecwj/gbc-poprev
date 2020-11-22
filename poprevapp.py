@@ -7,7 +7,7 @@ from reference_explorer import ReferenceExplorer
 from preview import Preview
 from util import ask_save_before_doing
 from constants import DRAW_WIDTH, DRAW_HEIGHT, REF_CANVAS_WIDTH,\
-    REF_CANVAS_HEIGHT, BACKGROUND_COLOUR
+    REF_CANVAS_HEIGHT, PREVIEW_HEIGHT, PREVIEW_WIDTH, BACKGROUND_COLOUR
 
 
 class PopRevApp(object):
@@ -51,7 +51,8 @@ class PopRevApp(object):
                                               bg=self._bg)
         self._refexplorer.pack(side=tk.LEFT)
 
-        self._preview = Preview(frame, 4 * DRAW_WIDTH, 4 * DRAW_HEIGHT)
+        self._preview = Preview(frame, PREVIEW_WIDTH, PREVIEW_HEIGHT,
+                                callback=self._handle_preview_click)
         self._preview.pack(side=tk.LEFT)
 
         self._master.config(bg=self._bg)
@@ -98,6 +99,11 @@ class PopRevApp(object):
             self.save_drawing_as()
         else:
             self.save_drawing()
+
+    def _handle_preview_click(self, x, y):
+        jumpx = int(x * DRAW_WIDTH / PREVIEW_WIDTH)
+        jumpy = int(y * DRAW_HEIGHT / PREVIEW_HEIGHT)
+        self.jump_to(jumpx, jumpy)
 
     def load_reference(self):
         filename = filedialog.askopenfilename(title="Open Reference Image",
