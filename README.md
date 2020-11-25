@@ -6,16 +6,13 @@ The  **G**ame **B**oy **C**amera **P**icture **o**f **P**icture **Rev**erser is 
 The GB Camera is a game cartridge that also has a camera attached. It allows users to take photographs and save them to the cartridge, where they can be viewed on the handheld console. However, without special hardware, it is not possible to transfer these photos to another device, such as a computer. This tool aims to provide a way to do so, using only the GB Camera, a GB console, a camera (other than the GB camera), and this app.
 
 ## Installing
-This app is written in and requires python to run.
+This app is written in and requires python 3 to run.
 
-In addition, the following python packages are required
-- numpy
-- opencv-python
-- Pillow
-- tkinter
+In addition, the python packages listed in requirements.txt must be installed. e.g.
 
-e.g.
 `pip3 install numpy opencv-python Pillow`
+
+Note that tkinter is also required, but may not be installed on some systems.
 
 After python and the required packages are installed, clone this repository.
 `git clone https://github.com/leecwj/gbc-poprev.git`
@@ -23,7 +20,7 @@ After python and the required packages are installed, clone this repository.
 Next, navigate to the newly created copy of the repository.
 `cd gbc-poprev`
 
-Execute the application via the entry point, `poprevapp.py`, e.g.
+Execute the application via the entry point, poprevapp.py, e.g.
 `python3 poprevapp.py`
 
 ## How to Use
