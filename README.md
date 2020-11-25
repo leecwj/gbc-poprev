@@ -2,6 +2,9 @@
 
 The  **G**ame **B**oy **C**amera **P**icture **o**f **P**icture **Rev**erser is an application aimed at providing an easily accessible way of transferring photos taken on a [Game Boy Camera](https://en.wikipedia.org/wiki/Game_Boy_Camera) to a computer.
 
+## Motivation
+The GB Camera is a game cartridge that also has a camera attached. It allows users to take photographs and save them to the cartridge, where they can be viewed on the handheld console. However, without special hardware, it is not possible to transfer these photos to another device, such as a computer. This tool aims to provide a way to do so, using only the GB Camera, a GB console, a camera (other than the GB camera), and this app.
+
 ## Installing
 This app is written in and requires python to run.
 
