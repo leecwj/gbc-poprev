@@ -125,13 +125,13 @@ class PopRevApp(object):
         self.refresh_components()
 
     def move_to(self, direction):
-        if direction == "north":
+        if direction == "up":
             self._y = (self._y - 1) % DRAW_HEIGHT
-        elif direction == "east":
+        elif direction == "right":
             self._x = (self._x + 1) % DRAW_WIDTH
-        elif direction == "south":
+        elif direction == "down":
             self._y = (self._y + 1) % DRAW_HEIGHT
-        elif direction == "west":
+        elif direction == "left":
             self._x = (self._x - 1) % DRAW_WIDTH
 
         self.refresh_components()
