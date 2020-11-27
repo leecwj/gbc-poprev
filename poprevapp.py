@@ -3,7 +3,7 @@ from tkinter import filedialog
 
 from poprev import PopRev
 from navigator import Navigator
-from reference_explorer import ReferenceExplorer
+from classifier import Classifier
 from preview import Preview
 from util import ask_save_before_doing
 from constants import DRAW_WIDTH, DRAW_HEIGHT, REF_CANVAS_WIDTH,\
@@ -23,7 +23,7 @@ class PopRevApp(object):
         self._x = 0
         self._y = 0
 
-        self._refexplorer = None
+        self._classifier = None
         self._preview = None
         self._navigator = None
 
@@ -46,10 +46,10 @@ class PopRevApp(object):
         frame = tk.Frame(self._master, bg=self._bg)
         frame.pack(side=tk.TOP)
 
-        self._refexplorer = ReferenceExplorer(frame,
-                                              self.handle_select_callback,
-                                              bg=self._bg)
-        self._refexplorer.pack(side=tk.LEFT)
+        self._classifier = Classifier(frame,
+                                      self.handle_select_callback,
+                                      bg=self._bg)
+        self._classifier.pack(side=tk.LEFT)
 
         self._preview = Preview(frame, PREVIEW_WIDTH, PREVIEW_HEIGHT,
                                 callback=self._handle_preview_click)
@@ -155,12 +155,12 @@ class PopRevApp(object):
             image = self._poprev.get_ref_context(self._x, self._y,
                                                  REF_CANVAS_WIDTH,
                                                  REF_CANVAS_HEIGHT, 1)
-            self._refexplorer.display_image(image)
+            self._classifier.display_image(image)
         else:
-            self._refexplorer.display_no_image_warning()
+            self._classifier.display_no_image_warning()
 
     def refresh_selector(self):
-        selector = self._refexplorer.get_selector()
+        selector = self._classifier.get_selector()
         colour = self._poprev.get_selection(self._x, self._y)
 
         if not (0 <= colour < 4):

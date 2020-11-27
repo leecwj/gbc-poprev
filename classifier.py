@@ -5,7 +5,10 @@ from colour_selector import ColourSelector
 from preview import Preview
 
 
-class ReferenceExplorer(tk.Frame):
+class Classifier(tk.Frame):
+    """
+
+    """
 
     def __init__(self, master, callback, bg="#ffffff"):
         super().__init__(master, bg=bg, padx=5)
