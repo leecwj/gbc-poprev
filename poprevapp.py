@@ -171,8 +171,8 @@ class PopRevApp(object):
     def refresh_navigator(self):
         self._navigator.display_position(self._x + 1, self._y + 1)
 
-    def handle_select_callback(self, id):
-        self._poprev.edit_drawing(self._x, self._y, id)
+    def handle_select_callback(self, identifier):
+        self._poprev.edit_drawing(self._x, self._y, identifier)
         self.next_pixel()
 
     def export_drawing(self):
