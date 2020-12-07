@@ -1,10 +1,13 @@
+import numpy as np
 from tkinter import messagebox
+from typing import Tuple, Callable
 
 
-def get_range_around(x, x_lower, x_upper, r):
+def get_range_around(x: int, x_lower: int, x_upper: int, r: int)\
+        -> Tuple[int, int]:
     """
-    Gets the "range" around a given point
-    :param x: The point to get a range around
+    Gets the "range" around a given number
+    :param x: The number to get a range around
     :param x_lower: The lower bound of the domain x resides in
     :param x_upper: The upper bound of the domain x resides in
     :param r: The radius of the range to return
@@ -25,7 +28,8 @@ def get_range_around(x, x_lower, x_upper, r):
     return range_lower, range_upper
 
 
-def highlight_sector(img, x, y, width, height, r, colour):
+def highlight_sector(img: np.ndarray, x: int, y: int, width: int, height: int,
+                     r: int, colour: Tuple[int, int, int]) -> None:
     """
     Draw a rectangle to highlight a "sector" of an image, i.e. a cell, if the
     image was to be divided into a grid
@@ -50,7 +54,8 @@ def highlight_sector(img, x, y, width, height, r, colour):
     draw_vline(img, x2, y1, y2, r, colour)
 
 
-def draw_vline(img, x, y1, y2, r, colour):
+def draw_vline(img: np.ndarray, x: int, y1: int, y2: int, r: int,
+               colour: Tuple[int, int, int]) -> None:
     """
     Draw a vertical line on an image.
     :param img: The image to draw on
@@ -65,7 +70,8 @@ def draw_vline(img, x, y1, y2, r, colour):
     draw_solid_rect(img, x - r, x + r + 1, y1, y2, colour)
 
 
-def draw_hline(img, x1, x2, y, r, colour):
+def draw_hline(img: np.ndarray, x1: int, x2: int, y: int, r: int,
+               colour: Tuple[int, int, int]) -> None:
     """
     Draw a horizontal line on an image.
     :param img: The image to draw on
@@ -80,7 +86,8 @@ def draw_hline(img, x1, x2, y, r, colour):
     draw_solid_rect(img, x1, x2, y - r, y + r + 1, colour)
 
 
-def draw_solid_rect(img, x1, x2, y1, y2, colour):
+def draw_solid_rect(img: np.ndarray, x1: int, x2: int, y1: int, y2: int,
+                    colour: Tuple[int, int, int]) -> None:
     """
     Draw a solid rectangle on an image.
     :param img: The image to draw on
@@ -96,7 +103,8 @@ def draw_solid_rect(img, x1, x2, y1, y2, colour):
             img[j, i] = colour
 
 
-def get_img_sector(img, x, y, width, height):
+def get_img_sector(img: np.ndarray, x: int, y: int, width: int, height: int)\
+        -> np.ndarray:
     """
     Get sector (x, y) from an image, i.e. divide the image into a
     width x height grid, and get the cell at (x, y)
@@ -110,7 +118,8 @@ def get_img_sector(img, x, y, width, height):
     return get_img_extract(img, x, x, y, y, width, height)
 
 
-def get_img_extract(img, x1, x2, y1, y2, width, height):
+def get_img_extract(img: np.ndarray, x1: int, x2: int, y1: int, y2: int,
+                    width: int, height: int) -> np.ndarray:
     """
     Get an extract of an image that includes all sectors of an image such that
     x1 <= x <= x2, y1 <= y <= y2.
@@ -129,11 +138,13 @@ def get_img_extract(img, x1, x2, y1, y2, width, height):
                int(x1 * xscale): int((x2 + 1) * xscale)]
 
 
-def ask_save_before_doing(save_fn, do_fn, title, message):
+def ask_save_before_doing(save_fn: Callable[[], None],
+                          do_fn: Callable[[], None],
+                          title: str, message: str) -> None:
     """
     Ask the user if they would like to save before a certain action proceeds.
-    :param save_fn: A no argument function that does the saving
-    :param do_fn: A no argument function that does the desired action
+    :param save_fn: A function that performs the saving
+    :param do_fn: A function that performs the desired action
     :param title: The title of the message box to display
     :param message: The message to display
     :return: None
