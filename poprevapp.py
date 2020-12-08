@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from typing import Callable
 
 from poprev import PopRev
 from navigator import Navigator
@@ -15,7 +16,7 @@ class PopRevApp(object):
     The Picture of Picture Reverser application.
     """
 
-    def __init__(self, master, bg=BACKGROUND_COLOUR):
+    def __init__(self, master, bg: str = BACKGROUND_COLOUR):
         """
         Initialise the application.
         :param master: parent container of this application
@@ -39,7 +40,8 @@ class PopRevApp(object):
         self._setup_view()
         self.refresh_components()
 
-    def _smart_ask_save_before_doing(self, do_fn, title, message):
+    def _smart_ask_save_before_doing(self, do_fn: Callable[[], None],
+                                     title: str, message: str) -> None:
         """
         If the current drawing has unsaved changes, ask the user if they
         would like to save before performing the action specified by do_fn.
@@ -54,7 +56,7 @@ class PopRevApp(object):
         else:
             do_fn()
 
-    def _setup_view(self):
+    def _setup_view(self) -> None:
         """
         Set up components of the GUI
         """
@@ -78,7 +80,7 @@ class PopRevApp(object):
         self._master.title("poprev")
         self._master.protocol("WM_DELETE_WINDOW", self._exit)
 
-    def _exit(self):
+    def _exit(self) -> None:
         """
         Exit the application after confirmation
         """
@@ -87,7 +89,7 @@ class PopRevApp(object):
         self._smart_ask_save_before_doing(lambda: self._master.destroy(),
                                           title, message)
 
-    def _setup_menu(self):
+    def _setup_menu(self) -> None:
         """
         Set up the menu bar
         """
@@ -119,7 +121,7 @@ class PopRevApp(object):
 
         self._file_menu = file_menu
 
-    def _smart_save(self):
+    def _smart_save(self) -> None:
         """
         If the current drawing has a save file name, save it to that file.
         Otherwise, bring up the save as dialog.
@@ -129,7 +131,7 @@ class PopRevApp(object):
         else:
             self.save_drawing()
 
-    def _handle_preview_click(self, x, y):
+    def _handle_preview_click(self, x: int, y: int) -> None:
         """
         Handle the event when the drawing preview is clicked.
         :param x: the x coordinate that was clicked
@@ -139,7 +141,7 @@ class PopRevApp(object):
         jumpy = int(y * DRAW_HEIGHT / PREVIEW_HEIGHT)
         self.jump_to(jumpx, jumpy)
 
-    def load_reference(self):
+    def load_reference(self) -> None:
         """
         Load a reference image
         """
@@ -154,7 +156,7 @@ class PopRevApp(object):
             self._poprev.load_reference(filename)
             self.refresh_components()
 
-    def next_pixel(self):
+    def next_pixel(self) -> None:
         """
         Go to the 'next' pixel i.e. right neighbour of current pixel, or
         left-most pixel in the next row down if the former does not apply (or
@@ -166,7 +168,7 @@ class PopRevApp(object):
 
         self.refresh_components()
 
-    def move_to(self, direction):
+    def move_to(self, direction: str) -> None:
         """
         Move to the next pixel in the specified direction.
         :param direction: the direction to move
@@ -182,7 +184,7 @@ class PopRevApp(object):
 
         self.refresh_components()
 
-    def jump_to(self, x, y):
+    def jump_to(self, x: int, y: int) -> None:
         """
         Jump to the pixel specified by the given (x, y) coordinate
         :param x: x coordinate of position to jump to
@@ -193,7 +195,7 @@ class PopRevApp(object):
 
         self.refresh_components()
 
-    def refresh_components(self):
+    def refresh_components(self) -> None:
         """
         Refresh appearance of GUI components
         """
@@ -202,7 +204,7 @@ class PopRevApp(object):
         self.refresh_title()
         self.refresh_navigator()
 
-    def refresh_preview(self):
+    def refresh_preview(self) -> None:
         """
         Refresh the appearance of the drawing preview
         """
@@ -216,7 +218,7 @@ class PopRevApp(object):
         else:
             self._classifier.display_no_image_warning()
 
-    def refresh_selector(self):
+    def refresh_selector(self) -> None:
         """
         Refresh the appearance of the colour selector
         """
@@ -228,13 +230,13 @@ class PopRevApp(object):
 
         selector.set_selected(colour)
 
-    def refresh_navigator(self):
+    def refresh_navigator(self) -> None:
         """
         Refresh the appearance of the navigator
         """
         self._navigator.display_position(self._x + 1, self._y + 1)
 
-    def handle_select_callback(self, identifier):
+    def handle_select_callback(self, identifier: int) -> None:
         """
         Handle the event when a colour is selected
         :param identifier: the id of the colour that was selected
@@ -242,7 +244,7 @@ class PopRevApp(object):
         self._poprev.edit_drawing(self._x, self._y, identifier)
         self.next_pixel()
 
-    def export_drawing(self):
+    def export_drawing(self) -> None:
         """
         Display a dialog allowing user to export the current drawing as an
         image.
@@ -254,14 +256,14 @@ class PopRevApp(object):
         if filename != "":
             self._poprev.export_drawing(filename)
 
-    def save_drawing(self):
+    def save_drawing(self) -> None:
         """
         Save changes to the current drawing.
         """
         self._poprev.save_drawing()
         self.refresh_title()
 
-    def save_drawing_as(self):
+    def save_drawing_as(self) -> None:
         """
         Display a dialog allowing the user to save the current drawing to a
         particular file
@@ -273,7 +275,7 @@ class PopRevApp(object):
             self._poprev.save_drawing_as(filename)
             self.refresh_title()
 
-    def load_drawing(self):
+    def load_drawing(self) -> None:
         """
         Display a dialog allowing the user to load a drawing
         """
@@ -285,7 +287,7 @@ class PopRevApp(object):
             self._poprev.load_drawing(filename)
             self.refresh_components()
 
-    def try_load_drawing(self):
+    def try_load_drawing(self) -> None:
         """
         If there are unsaved changes to the current drawing, ask the user if
         they would like to save before loading another drawing.
@@ -296,14 +298,14 @@ class PopRevApp(object):
         self._smart_ask_save_before_doing(lambda: self.load_drawing(),
                                           title, message)
 
-    def new_drawing(self):
+    def new_drawing(self) -> None:
         """
         Clear the current drawing and start a new one.
         """
         self._poprev.new_drawing()
         self.refresh_components()
 
-    def try_new_drawing(self):
+    def try_new_drawing(self) -> None:
         """
         If there are unsaved changes to the current drawing, ask the user if
         they would like to save before starting a new drawing.
@@ -314,7 +316,7 @@ class PopRevApp(object):
         self._smart_ask_save_before_doing(lambda: self.new_drawing(),
                                           title, message)
 
-    def handle_move_callback(self, direction):
+    def handle_move_callback(self, direction: str) -> None:
         """
         Handle the event when one of the up, down, left, or right buttons in
         the navigator are clicked.
@@ -322,7 +324,7 @@ class PopRevApp(object):
         """
         self.move_to(direction)
 
-    def handle_jump_callback(self, x, y):
+    def handle_jump_callback(self, x: int, y: int) -> None:
         """
         Handle the event when the jump button of the navigator is clicked.
         :param x: the x coordinate to jump to
@@ -330,7 +332,7 @@ class PopRevApp(object):
         """
         self.jump_to(x - 1, y - 1)
 
-    def refresh_title(self):
+    def refresh_title(self) -> None:
         """
         Refresh the title of the application window
         """
